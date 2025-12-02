@@ -3,8 +3,18 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+
+  // Enable CORS for all origins
+  app.enableCors({
+    origin: '*',
+  });
+
+  // Global API prefix
   app.setGlobalPrefix('api');
-  await app.listen(process.env.PORT ?? 3000);
+
+  const PORT = process.env.PORT ?? 3000;
+
+  // IMPORTANT: Bind to 0.0.0.0 (required for EC2)
+  await app.listen(PORT, '0.0.0.0');
 }
 bootstrap();
